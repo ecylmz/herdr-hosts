@@ -1,0 +1,24 @@
+[package]
+name = "herdr-hosts"
+version = "0.1.0"
+edition = "2021"
+description = "Hierarchical SSH host picker for Herdr"
+license = "MIT"
+repository = "https://github.com/ecylmz/herdr-hosts"
+readme = "README.md"
+
+[dependencies]
+glob = "0.3.4"
+ratatui = "0.29"
+serde_json = "1"
+
+[[bin]]
+name = "herdr-hosts"
+path = "src/main.rs"
+
+[[bin]]
+name = "herdr-hosts-ssh"
+path = "src/bin/ssh.rs"
+
+[profile.release]
+strip = true

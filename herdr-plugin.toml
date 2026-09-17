@@ -1,0 +1,40 @@
+id = "herdr-hosts"
+name = "SSH Hosts"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Hierarchical SSH host picker for Herdr"
+platforms = ["linux", "macos"]
+
+[[build]]
+command = ["cargo", "build", "--release"]
+
+# The picker itself. A popup leaves the tiled layout alone and closes as soon
+# as the command exits.
+[[panes]]
+id = "picker"
+title = "SSH Hosts"
+placement = "popup"
+width = "60%"
+height = "70%"
+command = ["./target/release/herdr-hosts"]
+
+# The ssh launcher. Herdr spawns it as argv and it runs ssh as argv, so no
+# shell is involved at any point. The alias arrives via --env, and the tab is
+# renamed to the host afterwards.
+[[panes]]
+id = "ssh"
+title = "SSH"
+placement = "tab"
+command = ["./target/release/herdr-hosts-ssh"]
+
+# Bind a key to this action, e.g.
+#   [[keys.command]]
+#   key = "prefix+h"
+#   type = "plugin_action"
+#   command = "herdr-hosts.open"
+[[actions]]
+id = "open"
+title = "SSH Hosts"
+description = "Open the SSH host picker"
+command = ["./target/release/herdr-hosts", "--open"]
+
