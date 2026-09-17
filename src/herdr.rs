@@ -150,9 +150,10 @@ mod tests {
 
         assert_eq!(pane_id_from_open_response(r#"{"error":{"code":"ui_busy"}}"#), None);
         assert_eq!(pane_id_from_open_response("not json"), None);
-        // A tab label rename must never be talked into taking a flag.
-        let evil = r#"{"result":{"plugin_pane":{"pane":{"pane_id":"w1:p1","tab_id":"--evil"}}}}"#;
-        assert_eq!(tab_id_from_open_response(evil), None);
+        // `tab focus <id>` and `tab rename <id>` take the id as argv, so an id
+        // that could read as a flag must not get that far.
+        let flag = r#"{"result":{"plugin_pane":{"pane":{"pane_id":"w1:p1","tab_id":"--force"}}}}"#;
+        assert_eq!(tab_id_from_open_response(flag), None);
     }
 
     #[test]

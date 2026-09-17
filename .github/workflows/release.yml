@@ -1,0 +1,44 @@
+name: release
+
+# Publishes the binaries that scripts/fetch-or-build.sh looks for, so
+# `herdr plugin install` works without a Rust toolchain.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - os: macos-14
+            target: aarch64-apple-darwin
+          - os: macos-13
+            target: x86_64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # A broken binary is worse than none, so the release gate is the tests.
+      - run: cargo test --release --locked
+
+      - run: cargo build --release --locked
+
+      - name: Package
+        run: |
+          tar -czf "herdr-hosts-${{ matrix.target }}.tar.gz" \
+            -C target/release herdr-hosts herdr-hosts-ssh
+
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: herdr-hosts-${{ matrix.target }}.tar.gz
