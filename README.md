@@ -14,15 +14,47 @@ is left entirely to OpenSSH.
 Requires Herdr ≥ 0.9.0 and OpenSSH. Linux and macOS.
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/ecylmz/herdr-hosts/main/install.sh | sh
+```
+
+That installs the plugin and binds it to the first free key it finds —
+`prefix+shift+s` on a stock config. It never overwrites an existing binding,
+and it backs up `config.toml` before touching it.
+
+Prefer to see what runs first? `curl -fsSL …/install.sh | less`, or do it by
+hand:
+
+```bash
 herdr plugin install ecylmz/herdr-hosts
 ```
 
-This downloads the binaries published with the matching release; if there is
-none for your platform it builds from source, which needs a
-[Rust toolchain](https://rustup.rs). Pin a revision with `--ref` if you want one.
+Either way you get the binaries published with the release; if there is none
+for your platform it builds from source, which needs a
+[Rust toolchain](https://rustup.rs).
+
+Open the picker with the bound key, or `herdr plugin action invoke
+herdr-hosts.open`.
 
 <details>
-<summary>From source, or for development</summary>
+<summary>Binding the key yourself</summary>
+
+Add this to `~/.config/herdr/config.toml` and run `herdr server reload-config`:
+
+```toml
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "herdr-hosts.open"
+description = "SSH hosts"
+```
+
+Check the key is free first — `herdr --default-config` lists Herdr's own
+bindings. `prefix+s` is settings and `prefix+h` is split_horizontal.
+
+</details>
+
+<details>
+<summary>From source, for development</summary>
 
 ```bash
 git clone https://github.com/ecylmz/herdr-hosts
@@ -37,39 +69,10 @@ herdr-hosts` first.
 
 </details>
 
-<details>
-<summary>Prebuilt binaries by hand</summary>
-
-Each [release](https://github.com/ecylmz/herdr-hosts/releases) carries
-`herdr-hosts-<target>.tar.gz` for x86_64/aarch64 Linux and Apple Silicon/Intel
-macOS. Unpack both binaries into `target/release/` inside a checkout, then
-`herdr plugin link "$PWD"`.
-
-</details>
-
-Then try it:
-
-```bash
-herdr plugin action invoke herdr-hosts.open
-```
-
-and bind it to a free key in `~/.config/herdr/config.toml`, followed by
-`herdr server reload-config`:
-
-```toml
-[[keys.command]]
-key = "prefix+shift+s"
-type = "plugin_action"
-command = "herdr-hosts.open"
-description = "SSH hosts"
-```
-
-Check the key is free first — `herdr --default-config` lists Herdr's own
-bindings. `prefix+s` is settings and `prefix+h` is split_horizontal.
-
 ## Update
 
 Herdr has no `plugin update`; reinstalling refreshes the managed checkout.
+Rerun the installer, or:
 
 ```bash
 herdr plugin install ecylmz/herdr-hosts
@@ -84,11 +87,16 @@ session tab to pick up the new one.
 ## Uninstall
 
 ```bash
-herdr plugin uninstall herdr-hosts   # or: herdr plugin unlink herdr-hosts
+curl -fsSL https://raw.githubusercontent.com/ecylmz/herdr-hosts/main/install.sh | sh -s -- --uninstall
 ```
 
-Favorites live in the plugin state directory and are not removed with it.
-`~/.ssh/config` is never touched.
+From a checkout, `./uninstall.sh` does the same — it is a symlink to
+`install.sh`, which reads its own name. (Over a pipe there is no name to read,
+hence the flag.)
+
+This removes the plugin and the key binding the installer added, and nothing
+else: favorites stay in the plugin state directory, and `~/.ssh/config` is
+never touched.
 
 ## Keys
 
