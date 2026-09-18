@@ -22,21 +22,25 @@ jobs:
             target: aarch64-unknown-linux-gnu
           - os: macos-14
             target: aarch64-apple-darwin
-          - os: macos-13
+          # GitHub retired its Intel macOS runners, so this one is
+          # cross-compiled from Apple Silicon.
+          - os: macos-14
             target: x86_64-apple-darwin
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
       # A broken binary is worse than none, so the release gate is the tests.
+      # They run for the host, which is the same code either way.
       - run: cargo test --release --locked
 
-      - run: cargo build --release --locked
+      - run: rustup target add ${{ matrix.target }}
+      - run: cargo build --release --locked --target ${{ matrix.target }}
 
       - name: Package
         run: |
           tar -czf "herdr-hosts-${{ matrix.target }}.tar.gz" \
-            -C target/release herdr-hosts herdr-hosts-ssh
+            -C "target/${{ matrix.target }}/release" herdr-hosts herdr-hosts-ssh
 
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
