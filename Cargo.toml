@@ -1,6 +1,6 @@
 [package]
 name = "herdr-hosts"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Hierarchical SSH host picker for Herdr"
 license = "MIT"

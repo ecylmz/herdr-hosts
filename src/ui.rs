@@ -8,14 +8,19 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph, Wrap};
 use ratatui::Frame;
 
-const HELP: &str = "\
-  ↑ / k     previous            / search
-  ↓ / j     next                f toggle favorite
-  → / l     open folder         r reload
-  ← / h     close folder / up   ? help
-  enter     connect, or return to an open session
-  shift+↵   always open a new tab for this host
-  space     expand / collapse   esc leave search   q quit";
+const HELP: &str = "  ↑ / k      previous
+  ↓ / j      next
+  → / l      open folder, step in
+  ← / h      close folder, step out
+  space      expand / collapse
+  enter      connect, or return to an open session
+  shift+↵    always open a new tab for this host
+  /          search (alias, folder, note)
+  esc        leave search, then close
+  f          toggle favorite
+  r          reload ~/.ssh/config
+  ?          help
+  q          quit";
 
 pub fn draw(frame: &mut Frame, app: &mut App, list_state: &mut ListState) {
     let [list_area, status_area] =

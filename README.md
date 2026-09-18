@@ -101,13 +101,19 @@ never touched.
 ## Keys
 
 ```
-↑ / k     previous               /  search (alias, folder, note)
-↓ / j     next                   f  toggle favorite
-→ / l     open folder, step in   r  reload ~/.ssh/config
-← / h     close folder, step out ?  help
-enter     connect, or return to an open session
-shift+↵   always open a new tab for this host
-space     expand / collapse      esc  leave search, then close
+↑ / k      previous
+↓ / j      next
+→ / l      open folder, step in
+← / h      close folder, step out
+space      expand / collapse
+enter      connect, or return to an open session
+shift+↵    always open a new tab for this host
+/          search (alias, folder, note)
+esc        leave search, then close
+f          toggle favorite
+r          reload ~/.ssh/config
+?          help
+q          quit
 ```
 
 Enter on a host that already has a session switches to its tab rather than
