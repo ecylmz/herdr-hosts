@@ -30,7 +30,7 @@ mode() {
 }
 
 require_herdr() {
-    command -v herdr >/dev/null 2>&1 || die "herdr is not on PATH — see https://herdr.dev"
+    command -v herdr >/dev/null 2>&1 || die "herdr is not on PATH, see https://herdr.dev"
     version=$(herdr --version 2>/dev/null | awk '{print $NF}')
     case "$version" in
         0.[0-8].* | 0.[0-8]) die "needs Herdr 0.9.0 or newer, found $version" ;;
@@ -105,7 +105,7 @@ case $(mode "$@") in
         herdr plugin install "$REPO" -y
         bind_key
         reload
-        say "done — open the picker with the key above, or:"
+        say "done. Open the picker with the key above, or:"
         say "  herdr plugin action invoke $ACTION"
         ;;
     uninstall)

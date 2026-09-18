@@ -1,12 +1,12 @@
 # herdr-hosts
 
 A hierarchical SSH host picker for [Herdr](https://herdr.dev). Press a key, find
-the host, press Enter — the session opens in its own tab, named after the host.
+the host, press Enter. The session opens in its own tab, named after the host.
 
 <img src="docs/preview.png" alt="The SSH host picker" width="560">
 
 Folders, notes and all connection details come from `~/.ssh/config`. There is no
-config file of its own, and **the plugin stores no credentials** — authentication
+config file of its own, and **the plugin stores no credentials**. Authentication
 is left entirely to OpenSSH.
 
 ## Install
@@ -17,7 +17,7 @@ Requires Herdr ≥ 0.9.0 and OpenSSH. Linux and macOS.
 curl -fsSL https://raw.githubusercontent.com/ecylmz/herdr-hosts/main/install.sh | sh
 ```
 
-That installs the plugin and binds it to the first free key it finds —
+That installs the plugin and binds it to the first free key it finds, which is
 `prefix+shift+s` on a stock config. It never overwrites an existing binding,
 and it backs up `config.toml` before touching it.
 
@@ -48,7 +48,7 @@ command = "herdr-hosts.open"
 description = "SSH hosts"
 ```
 
-Check the key is free first — `herdr --default-config` lists Herdr's own
+Check the key is free first. `herdr --default-config` lists Herdr's own
 bindings. `prefix+s` is settings and `prefix+h` is split_horizontal.
 
 </details>
@@ -64,7 +64,7 @@ herdr plugin link "$PWD"
 ```
 
 `plugin link` does not run build steps, so rebuild yourself after changing the
-code. A linked plugin cannot be installed over — `herdr plugin unlink
+code. A linked plugin cannot be installed over, so run `herdr plugin unlink
 herdr-hosts` first.
 
 </details>
@@ -90,7 +90,7 @@ session tab to pick up the new one.
 curl -fsSL https://raw.githubusercontent.com/ecylmz/herdr-hosts/main/install.sh | sh -s -- --uninstall
 ```
 
-From a checkout, `./uninstall.sh` does the same — it is a symlink to
+From a checkout, `./uninstall.sh` does the same. It is a symlink to
 `install.sh`, which reads its own name. (Over a pipe there is no name to read,
 hence the flag.)
 
@@ -140,18 +140,18 @@ Host *.internal
     User root
 ```
 
-* **A heading** is a comment fenced by at least two of the same separator —
+* **A heading** is a comment fenced by at least two of the same separator:
   `# --- Work ---`, `# === Work ===`, `# ** Work **`. `/` nests it. An ordinary
   comment like `# rotate this key` is *not* a heading, so an existing config
   keeps its meaning.
 * **A heading runs until the next one.** Blank lines do not end a section, so
-  hosts that should be ungrouped go above the first heading — `laptop` lands in
+  hosts that should be ungrouped go above the first heading. `laptop` lands in
   `Ungrouped`, `research-vm` does not.
 * **Notes** are trailing comments on the `Host` line. OpenSSH ignores everything
   after `#` there, so they cost nothing.
 * **Patterns** like `Host *.internal` set defaults rather than name a host, so
   they are not listed.
-* `Include` is followed, and relative paths resolve against `~/.ssh` — the same
+* `Include` is followed, and relative paths resolve against `~/.ssh`, the same
   rule OpenSSH uses.
 
 A config with no headings at all is simply one flat list, which is the right
@@ -164,9 +164,9 @@ one alias per line. `~/.ssh/config` is never written to.
 
 Two binaries, declared in `herdr-plugin.toml`:
 
-* `herdr-hosts` — the picker, opened as a **popup**, which leaves the tiled
+* `herdr-hosts` is the picker, opened as a **popup**, which leaves the tiled
   layout untouched and closes when the process exits.
-* `herdr-hosts-ssh` — opened in its **own tab** with the alias in
+* `herdr-hosts-ssh` is opened in its **own tab** with the alias in
   `HERDR_HOSTS_ALIAS`.
 
 Herdr spawns plugin entrypoints as argv and the launcher runs `ssh <alias>` as
@@ -180,7 +180,7 @@ server: `cargo test`.
 
 * No online/offline detection.
 * Folders and notes are written in `~/.ssh/config`, not in the UI.
-* No file watcher — press `r` after editing the config.
+* No file watcher. Press `r` after editing the config.
 * Settings like `HostName` and `Port` are not resolved; ask OpenSSH instead
   (`ssh -G <alias>`).
 * A persistent docked sidebar is not implemented; the picker is a popup.
